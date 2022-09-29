@@ -1,14 +1,3 @@
-if [ -z "$DISABLE_OMZ_AUTOUPDATE" ]; then
-   echo
-   printf 'Disable ohmyzsh auto update? (Y/n) '
-   read r
-   case $r in '' | y | Y)
-      DISABLE_OMZ_AUTOUPDATE=1
-      echo 'INFO: manually update command `omz update`'
-      ;;
-   esac
-fi
-
 if [ -z "$USE_PLUGLOADER" ]; then
    echo
    printf 'Split to-load ohmyzsh plugins into ~/.zshrc.plogloader-list.txt? (Y/n) '

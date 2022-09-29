@@ -1,0 +1,12 @@
+source scripts/resolve-addpkgcmd
+
+if [ ! -x "$(command -v zsh)" ]; then
+    $addpkgcmd zsh
+    if [ -x "$(command -v apk)" ]; then
+        $addpkgcmd zsh-vcs
+    fi
+fi
+
+if [ ! -x "$(command -v wget)" ] && [ ! -x "$(command -v curl)" ]; then
+    $addpkgcmd wget
+fi

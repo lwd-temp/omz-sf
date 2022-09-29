@@ -1,0 +1,56 @@
+echo '==> Checking Config'
+echo 'Edit `./use-*` config files before setup. Reference: `./samples`'
+echo
+
+echo 'Ohmyzsh install path:'
+echo ZSH=$ZSH
+if [ -n "$INSTALLER_URL" ]; then echo INSTALLER_URL=$INSTALLER_URL; fi
+if [ -n "$REMOTE" ]; then echo REMOTE=$REMOTE; fi
+echo
+
+echo 'Disable auto update (manually do by `omz update`):'
+echo disableAutoUpdate=$disableAutoUpdate
+echo
+
+echo 'Use the recommended modified steeef theme:'
+echo useRecommendedTheme=$useRecommendedTheme
+echo
+
+echo 'Split your `.zshrc` code into `~/.zshrc.local`:'
+echo useZshrcLocal=$useZshrcLocal
+echo
+
+echo 'Extract plugins array from `.zshrc` into $ZSH_PLUGLOADER and $ZSH_PLUGLOADER_LIST:'
+echo useZshrcPluginsLoader=$useZshrcPluginsLoader
+echo
+
+if [ "$useZshrcPluginsLoader" = 1 ]; then
+
+    echo ZSH_PLUGLOADER=$ZSH_PLUGLOADER
+    echo ZSH_PLUGLOADER_LIST=$ZSH_PLUGLOADER_LIST
+    echo
+
+    echo 'Add recommended plugins:'
+    echo addRecommendedPlugins=$addRecommendedPlugins
+    echo
+
+    if [ -n "$addEnhancedAliasesPlugins" ]; then
+        echo 'Add enhanced aliases plugins:'
+        echo addEnhancedAliasesPlugins=$addEnhancedAliasesPlugins
+        echo
+    fi
+fi
+
+echo 'Install `zsh-syntax-highlighting`:'
+echo installSyntaxHightlight=$installSyntaxHightlight
+echo
+
+echo 'Install `zsh-autosuggestions`:'
+echo installAutoSuggestions=$installAutoSuggestions
+echo
+
+if [ -x "$(command -v pacman)" ]; then
+    echo 'Install `pkgfile` to provide command-not-found advice:'
+    echo installPkgfile=$installPkgfile
+    echo
+fi

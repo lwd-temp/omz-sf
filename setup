@@ -1,0 +1,108 @@
+#!/bin/sh
+set -e
+cd $(dirname $0)
+
+. config
+for useConfigFile in use-*; do
+   . $useConfigFile
+done
+
+. scripts/check-config
+
+printf 'Confirm to setup? (Y/n) '
+read r
+case $r in
+'' | y | Y) ;;
+*) exit ;;
+esac
+
+echo '==> Begin to setup'
+
+source scripts/resolve-environment
+source scripts/install-requirements
+
+if [ ! -d "$ZSH" ]; then
+   INSTALLER_URL=${INSTALLER_URL:-https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh}
+   RUNZSH=no sh -c "$([ -x "$(command -v wget)" ] && wget "$INSTALLER_URL" -O - || curl -fsSL "$INSTALLER_URL")"
+fi
+
+if [ "$disableAutoUpdate" = 1 ]; then
+   sed -i "/disable automatic updates/ s/^#[ ]*//" ~/.zshrc
+fi
+
+if [ "$useRecommendedTheme" = 1 ]; then
+   source scripts/tweak-use_recommended_theme
+fi
+
+if [ "$useZshrcPluginsLoader" = 1 ]; then
+   source scripts/tweak-use_zshrc_plugins_loader
+fi
+
+echo >>~/.zshrc
+cat snippets/.zshrc >>~/.zshrc
+
+exit
+
+sed -i "s#plugins=(git)\$#source \"$ZSH_PLUGLOADER\"#" ~/.zshrc
+echo "• Plugins dynamic loader: $ZSH_PLUGLOADER"
+echo "• Plugins static list: $ZSH_PLUGLOADER_LIST"
+echo
+
+if [ "$USE_SYNTAX_HIGHLIGHT" = 1 ]; then
+   $INSTPKG zsh-syntax-highlighting
+   dirs='/usr/share/zsh/plugins/zsh-syntax-highlighting
+/usr/share/zsh-syntax-highlighting'
+
+   for dir in $dir; do
+      if [ -d "$dir" ]; then
+         echo 'source $dir/zsh-syntax-highlighting.zsh' >>~/.zshrc
+         break
+      fi
+   done
+fi
+
+if [ "$USE_AUTO_SUGGEST" = 1 ]; then
+   $INSTPKG zsh-autosuggestions
+   dirs='/usr/share/zsh/plugins/zsh-autosuggestions
+/usr/share/zsh-autosuggestions'
+
+   for dir in $dir; do
+      if [ -d "$dir" ]; then
+         echo 'source $dir/zsh-autosuggestions.zsh' >>~/.zshrc
+         break
+      fi
+   done
+
+   cat <<END >>~/.zshrc
+pasteinit(){OLD_SELF_INSERT=\${\${(s.:.)widgets[self-insert]}[2,3]};zle -N self-insert url-quote-magic}
+pastefinish(){zle -N self-insert \$OLD_SELF_INSERT}
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
+END
+fi
+
+if [ "$USE_PACMAN_PKGFILE" = 1 ]; then
+   $INSTPKG pkgfile
+   echo 'source /usr/share/doc/pkgfile/command-not-found.zsh' | tee -a ~/.zshrc >/dev/null
+   echo "==> Run 'sudo pkgfile -u'"
+   if [ -x "$(command -v lsb_release)" ]; then
+      sudo pkgfile -u
+   elif [ -n "$ismsys" ]; then
+      pkgfile -u
+   fi
+fi
+
+if [ -n "$ismsys" ]; then
+   echo "alias sudo=''" | tee -a ~/.zshrc >/dev/null
+fi
+
+echo 'source ~/.zshrc.local' >>~/.zshrc
+touch ~/.zshrc.local
+
+if [ -n "$USE_LOCALIZE" ]; then
+   cat snippets/.zshrc.local >>~/.zshrc.local
+fi
+
+if [ "$RUNZSH" != no ]; then
+   exec zsh -l
+fi

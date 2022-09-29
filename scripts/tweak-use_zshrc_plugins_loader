@@ -1,0 +1,26 @@
+cat <<END >$ZSH_PLUGLOADER
+#!/bin/zsh
+plugins=()
+while read -r line; do
+    if [[ "\$line" != '#'* ]]; then
+        read -A list <<<"\$line"
+        plugins+=("\${list[@]}")
+    fi
+done <$ZSH_PLUGLOADER_LIST
+END
+
+if [ "$USE_RECOMMEND_PLUGINS" = 1 ]; then
+   [ ! -f "$ZSH_PLUGLOADER_LIST" ] &&
+      cat snippets/.zshrc.plug.list >$ZSH_PLUGLOADER_LIST
+
+   if [ "$USE_COMMON_ALIASES" = 1 ]; then
+      echo common-aliases >>"$ZSH_PLUGLOADER_LIST"
+   fi
+   if [ "$USE_GLOBALIAS" = 1 ]; then
+      echo globalias >>"$ZSH_PLUGLOADER_LIST"
+   fi
+
+   lib/recommended-plugins-tweaker $ZSH_PLUGLOADER $ZSH_PLUGLOADER_LIST
+else
+   touch $ZSH_PLUGLOADER_LIST
+fi

@@ -2,9 +2,9 @@
 
 ## Setup
 
-git clone me and cd into, run `./go`
-
-( `./go-c` from [gitee.com mirror](https://gitee.com/mirrors/oh-my-zsh) )
+1. Git clone this repository and `cd` into it
+2. Edit `./config` or `cp samples/* .`
+3. Run `./setup`
 
 ## What Todo
 

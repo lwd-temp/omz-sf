@@ -1,25 +1,25 @@
-if [ -z "$INSTPKG" ]; then
+if [ -z "$addpkgcmd" ]; then
    if [ -x "$(command -v pacman)" ]; then
-      INSTPKG='pacman -S --noconfirm'
+      addpkgcmd='pacman -S --noconfirm'
    elif [ -x "$(command -v dpkg)" ]; then
-      INSTPKG='apt-get install -y'
+      addpkgcmd='apt-get install -y'
    elif [ -x "$(command -v dnf)" ]; then
-      INSTPKG='dnf install -y'
+      addpkgcmd='dnf install -y'
    elif [ -x "$(command -v apk)" ]; then
-      INSTPKG='apk add'
+      addpkgcmd='apk add'
    elif [ -x "$(command -v pkcon)" ] && [ -d /run/systemd/system ]; then
-      INSTPKG='pkcon install -y'
+      addpkgcmd='pkcon install -y'
    fi
-   case $INSTPKG in pkcon*) ;; *)
+   case $addpkgcmd in pkcon*) ;; *)
       if [ $(id -u) != 0 ] && [ -x "$(command -v sudo)" ]; then
-         INSTPKG="sudo $INSTPKG"
+         addpkgcmd="sudo $addpkgcmd"
       fi
       ;;
    esac
 fi
 
-if [ -n "$INSTPKG" ]; then
-   echo "INFO: package installer = $INSTPKG"
+if [ -n "$addpkgcmd" ]; then
+   echo "INFO: package installer = $addpkgcmd"
 else
    echo
    echo "What's your package manager? such as:"
@@ -28,5 +28,5 @@ else
    echo '- `sudo dnf install -y`'
    echo '- `sudo apk add`'
    echo '- ...'
-   read -p 'Input the command:' INSTPKG
+   read -p 'Input the command:' addpkgcmd
 fi

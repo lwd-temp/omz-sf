@@ -1,0 +1,27 @@
+# Disable auto update:
+disableAutoUpdate=1
+
+# Use the recommended modified steeef theme:
+useRecommendedTheme=1
+
+# Split your `.zshrc` code into `~/.zshrc.local`:
+useZshrcLocal=1
+
+# Extract plugins array from `.zshrc` into `.zshrc.plug.list` and `.zshrc.plug.loader`, add recommended plugins:
+useZshrcPluginsLoader=1
+addRecommendedPlugins=1
+
+# Install `zsh-syntax-highlighting`:
+installSyntaxHightlight=1
+
+# Install `zsh-autosuggestions`:
+installAutoSuggestions=1
+
+# Install `pkgfile` for pacman to provide command-not-found advice:
+installPkgfile=1
+
+# Constants
+ZSH=${ZSH:-$HOME/.oh-my-zsh}
+ZSH_CUSTOM="$ZSH/custom"
+ZSH_PLUGLOADER=${ZSH_PLUGLOADER:-$HOME/.zshrc.plug.loader}
+ZSH_PLUGLOADER_LIST=${ZSH_PLUGLOADER_LIST:-$HOME/.zshrc.plug.list}

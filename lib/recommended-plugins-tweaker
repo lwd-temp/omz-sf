@@ -22,7 +22,7 @@ fi
 [ -x "$(command -v pacman)" ] && echo archlinux >>$2
 
 echo >>$1
-cat src/recommended-plugins-autoloader.zsh >>$1
+cat snippets/.zshrc.plug.loader >>$1
 
 if grep -q globalias $2; then
     ialist="
